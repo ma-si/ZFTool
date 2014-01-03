@@ -5,6 +5,7 @@ use ZFTool\Diagnostics\Result\Success;
 use ZFTool\Diagnostics\Test\Callback;
 use ZFTool\Diagnostics\Test\ClassExists;
 use ZFTool\Diagnostics\Test\CpuPerformance;
+use ZFTool\Diagnostics\Test\DiskFree;
 use ZFTool\Diagnostics\Test\DirReadable;
 use ZFTool\Diagnostics\Test\DirWritable;
 use ZFTool\Diagnostics\Test\ExtensionLoaded;
@@ -31,6 +32,97 @@ class BasicTestsTest extends \PHPUnit_Framework_TestCase
         $test = new CpuPerformance(999999999); // improbable to archive
         $result = $test->run();
         $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $result);
+    }
+
+    public function testDiskFree()
+    {
+        // enough space
+        $test = new DiskFree(1); // minimum size - integer given
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Success', $test->run());
+        
+        $test = new DiskFree('1B'); // minimum size - string given
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Success', $test->run());
+        
+        $test = new DiskFree(array(1, '/')); // minimum size - integer given in array
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Success', $test->run());
+        
+        $test = new DiskFree(array('1B', '/')); // minimum size - string given in array
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Success', $test->run());
+        
+        $test = new DiskFree(array(array(1, '/'))); // minimum size - integer given sub array
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Success', $test->run());
+        
+        $test = new DiskFree(array(array('1B', '/'))); // minimum size - string given in sub array
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Success', $test->run());
+        
+        
+        // not enough space
+//        $failureInteger = 1024*1024*1024;
+//        $test = new DiskFree($failureInteger); // minimum size - integer given
+//        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $test->run());
+        
+        $test = new DiskFree('10PiB'); // minimum size - string given
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $test->run());
+        
+//        $test = new DiskFree(array($failureInteger, '/')); // minimum size - integer given in array
+//        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $test->run());
+        
+        $test = new DiskFree(array('10PiB', '/')); // minimum size - string given in array
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $test->run());
+        
+//        $test = new DiskFree(array(array($failureInteger, '/'))); // minimum size - integer given sub array
+//        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $test->run());
+        
+        $test = new DiskFree(array(array('10PiB', '/'))); // minimum size - string given in sub array
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $test->run());
+    }
+    
+    public function testDiskFreeInvalidParameterPathNotExistingInArray()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new DiskFree(array(1, 'improbablePath')); // Not existing directory in array
+    }
+    
+    public function testDiskFreeInvalidParameterPathNotExistingInSubArray()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new DiskFree(array(array(1, 'improbablePath'))); // Not existing directory in sub array
+    }
+    
+    public function testDiskFreeInvalidParameterPathNotStringInArray()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new DiskFree(array(1, 1)); // non string path in array
+    }
+    
+    public function testDiskFreeInvalidParameterPathNotStringInSubArray()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new DiskFree(array(array(1, 1))); // non string path in sub array
+    }
+    
+    public function testDiskFreeInvalidParameterSizeByte()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new DiskFree(array(array('improbableSize999999999999999999', '/'))); // Invalid byte size provided
+    }
+    
+    public function testDiskFreeInvalidParameterSizeNotPositiveInteger()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new DiskFree(0); // non positive number
+    }
+    
+    public function testDiskFreeInvalidParameterSizeNotPositiveIntegerInArray()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new DiskFree(array(0, '/')); // non positive number in array
+    }
+    
+    public function testDiskFreeInvalidParameterSizeNotPositiveIntegerInSubArray()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new DiskFree(array(array(0, '/'))); // non positive number in sub array
     }
 
     public function testClassExists()
