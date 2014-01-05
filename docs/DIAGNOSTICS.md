@@ -287,6 +287,45 @@ return array(
 );
 ````
 
+### DiskFree
+
+Check if there is enough remaining disk space.
+
+The first parameter is the minimum disk space, which can be supplied as integer (in bytes, i.e. `1024`)
+or as a string with a multiplier (IEC, SI or Jedec, i.e. `"150MB"`). The second parameter is the path to check -
+on *NIX systems it is an ordinary path (i.e. `/home`), on Windows systems it is a drive letter (i.e. `"C:"`).
+
+The following test definition will check whether there is enough disk space at directories:
+
+````php
+<?php
+// modules/Application/config/module.config.php
+return array(
+    'diagnostics' => array(
+        'application' => array(
+            // one param - $size, default path '/' will be set
+            'Check if there is enough remaining disk space at /' => array(
+                'DiskFree',
+                '100MiB'
+            ),
+            // array with two params - $size and $path
+            'Check if there is enough remaining disk space at /home' => array(
+                'DiskFree',
+                array('1TiB', '/home')
+            ),
+            // array of definitions - array($size, $path)
+            'Check if there is enough remaining disk space at directories' => array(
+                'DiskFree',
+                array(
+                    array(900, __DIR__ . '/data'),
+                    array('100MB', __DIR__ . '/home'),
+                )
+            ),
+        )
+    )
+);
+````
+
 ### DirReadable
 
 Check if a given path points to a directory and it is readable.
