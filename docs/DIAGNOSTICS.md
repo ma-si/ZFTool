@@ -266,6 +266,23 @@ return array(
 );
 ````
 
+### ProcessRunning
+
+Check if a system service name/pid is running. For example:
+
+````php
+<?php
+// modules/Application/config/module.config.php
+return array(
+    'diagnostics' => array(
+        'application' => array(
+            'Check memcached service' => array('ProcessRunning', 'memcached'),
+            'Check by pid' => array('ProcessRunning', 5580)
+        )
+    )
+);
+````
+
 ### CpuPerformance
 
 Benchmark CPU performance and return failure if it is below the given ratio. The baseline for performance calculation
