@@ -1,15 +1,12 @@
 <?php
 namespace ZFTool\Diagnostics\Test;
 
+use ZFTool\Diagnostics\Exception\InvalidArgumentException;
 use ZFTool\Diagnostics\Result\Failure;
 use ZFTool\Diagnostics\Result\Success;
-//use ZFTool\Diagnostics\Result\Warning;
 
 /**
- * Calculate CPU Performance by performing a Gauss-Legendre decimal expansion of PI.
- *
- * The baseline has been calculated as the average time needed to calculate 1000 digits of PI
- * on an Amazon AWS EC2 Micro Instance.
+ * Check if system service is running.
  *
  * @package ZFTool\Diagnostics\Test
  */

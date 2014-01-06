@@ -4,6 +4,7 @@ namespace ZFToolTest\Diagnostics\Test;
 use ZFTool\Diagnostics\Result\Success;
 use ZFTool\Diagnostics\Test\Callback;
 use ZFTool\Diagnostics\Test\ClassExists;
+use ZFTool\Diagnostics\Test\ProcessRunning;
 use ZFTool\Diagnostics\Test\CpuPerformance;
 use ZFTool\Diagnostics\Test\DirReadable;
 use ZFTool\Diagnostics\Test\DirWritable;
@@ -20,6 +21,21 @@ class BasicTestsTest extends \PHPUnit_Framework_TestCase
         $test = new AlwaysSuccessTest();
         $test->setLabel($label);
         $this->assertEquals($label, $test->getLabel());
+    }
+
+    public function testProcessRunning()
+    {
+        /**
+         * @todo check existing service
+         */
+
+        $test = new ProcessRunning(999999999); // improbable to achieve
+        $result = $test->run();
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $result);
+
+        $test = new ProcessRunning('dummyService'); // dummy service
+        $result = $test->run();
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $result);
     }
 
     public function testCpuPerformance()
