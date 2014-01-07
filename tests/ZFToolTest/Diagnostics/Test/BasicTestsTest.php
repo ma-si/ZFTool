@@ -362,5 +362,15 @@ class BasicTestsTest extends \PHPUnit_Framework_TestCase
         new StreamWrapperExists(15);
     }
 
+    public function testProcessRunningInvalidArgument1()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new ProcessRunning(-1);
+    }
 
+    public function testProcessRunningInvalidArgument2()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new ProcessRunning(0);  // same as ''
+    }
 }
