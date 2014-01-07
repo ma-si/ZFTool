@@ -23,14 +23,17 @@ class BasicTestsTest extends \PHPUnit_Framework_TestCase
         $test->setLabel($label);
         $this->assertEquals($label, $test->getLabel());
     }
-
+    
+    /**
+     * @covers ProcessRunning::run
+     */
     public function testProcessRunning()
     {
         /**
          * @todo check existing service
          */
 
-        $test = new ProcessRunning(999999999); // improbable to achieve
+        $test = new ProcessRunning(PHP_INT_MAX); // improbable to achieve
         $result = $test->run();
         $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $result);
 
@@ -453,19 +456,28 @@ class BasicTestsTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
         new StreamWrapperExists(15);
     }
-
+    
+    /**
+     * @covers ProcessRunning::run
+     */
     public function testProcessRunningInvalidArgument1()
     {
         $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
         new ProcessRunning(-1);
     }
-
+    
+    /**
+     * @covers ProcessRunning::run
+     */
     public function testProcessRunningInvalidArgument2()
     {
         $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
         new ProcessRunning(0);
     }
-
+    
+    /**
+     * @covers ProcessRunning::run
+     */
     public function testProcessRunningInvalidArgument3()
     {
         $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
