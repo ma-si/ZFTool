@@ -371,6 +371,12 @@ class BasicTestsTest extends \PHPUnit_Framework_TestCase
     public function testProcessRunningInvalidArgument2()
     {
         $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
-        new ProcessRunning(0);  // same as ''
+        new ProcessRunning(0);
+    }
+
+    public function testProcessRunningInvalidArgument3()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new ProcessRunning(array('dummy'));
     }
 }
