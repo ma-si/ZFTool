@@ -4,6 +4,7 @@ namespace ZFToolTest\Diagnostics\Test;
 use ZFTool\Diagnostics\Result\Success;
 use ZFTool\Diagnostics\Test\Callback;
 use ZFTool\Diagnostics\Test\ClassExists;
+use ZFTool\Diagnostics\Test\ProcessRunning;
 use ZFTool\Diagnostics\Test\CpuPerformance;
 use ZFTool\Diagnostics\Test\DiskFree;
 use ZFTool\Diagnostics\Test\DirReadable;
@@ -21,6 +22,21 @@ class BasicTestsTest extends \PHPUnit_Framework_TestCase
         $test = new AlwaysSuccessTest();
         $test->setLabel($label);
         $this->assertEquals($label, $test->getLabel());
+    }
+
+    public function testProcessRunning()
+    {
+        /**
+         * @todo check existing service
+         */
+
+        $test = new ProcessRunning(999999999); // improbable to achieve
+        $result = $test->run();
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $result);
+
+        $test = new ProcessRunning('dummyService'); // dummy service
+        $result = $test->run();
+        $this->assertInstanceOf('ZFTool\Diagnostics\Result\Failure', $result);
     }
 
     public function testCpuPerformance()
@@ -438,5 +454,15 @@ class BasicTestsTest extends \PHPUnit_Framework_TestCase
         new StreamWrapperExists(15);
     }
 
+    public function testProcessRunningInvalidArgument1()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new ProcessRunning(-1);
+    }
 
+    public function testProcessRunningInvalidArgument2()
+    {
+        $this->setExpectedException('ZFTool\Diagnostics\Exception\InvalidArgumentException');
+        new ProcessRunning(0);  // same as ''
+    }
 }
