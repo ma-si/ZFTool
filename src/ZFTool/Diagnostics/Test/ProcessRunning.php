@@ -56,10 +56,10 @@ class ProcessRunning extends AbstractTest implements TestInterface
             $this->processName = $processNameOrPid;
         }
         
-        // TODO: make more OS agnostic - regexp for specific strings like NT maybe
-        exec('uname', $output, $return);
-        switch ($return) {
-            case 'MINGW32_NT-6.2':
+        // TODO: make more OS agnostic - regexp maybe
+        $os = php_uname('s');
+        switch ($os) {
+            case 'Windows NT':
                 $this->os = 'windows';
                 break;
             default:
@@ -76,7 +76,6 @@ class ProcessRunning extends AbstractTest implements TestInterface
      */
     public function run()
     {
-        // TODO: make more OS agnostic
         if ($this->pid) {
             return $this->checkPid();
         } else {
